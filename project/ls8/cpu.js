@@ -4,7 +4,7 @@
 
 const HLT = 0b00000001;
 const LDI = 0b10011001;
-const PRN = 0b01000011
+const PRN = 0b01000011;
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -90,6 +90,7 @@ class CPU {
         let operandA = this.ram.read(this.reg.PC + 1);
         let operandB = this.ram.read(this.reg.PC + 2);
 
+
         // Execute the instruction. Perform the actions for the instruction as
         // outlined in the LS-8 spec.
 
@@ -99,7 +100,7 @@ class CPU {
                 break;
 
             case LDI:
-                this.reg[operandA] = [operandB];
+                this.reg[operandA] = operandB;
                 break;
 
             case PRN:
@@ -112,6 +113,7 @@ class CPU {
             break;
         }
 
+
         // Increment the PC register to go to the next instruction. Instructions
         // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
         // instruction byte tells you how many bytes follow the instruction byte
@@ -119,7 +121,7 @@ class CPU {
         
         // !!! IMPLEMENT ME
 
-        this.reg.PC +- (IR >>> 6) + 1
+        this.reg.PC += (IR >>> 6) + 1
 
     }
 }
