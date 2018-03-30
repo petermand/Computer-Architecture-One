@@ -6,6 +6,11 @@ const HLT = 0b00000001;
 const LDI = 0b10011001;
 const PRN = 0b01000011;
 const MUL = 0b10101010;
+const PUSH = 0b01001101;
+const POP = 0b01001100;
+const CALL = 0b01001000
+
+const SP = 7;
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -22,6 +27,8 @@ class CPU {
         
         // Special-purpose registers
         this.reg.PC = 0; // Program Counter
+
+        this.reg[SP] = 0xF4 // empty stack
     }
 	
     /**
@@ -115,6 +122,23 @@ class CPU {
                  this.alu('MUL', operandA, operandB);   
                  break;
 
+            case PUSH:
+                this.reg[SP]--;
+                this.ram.write(this.reg[SP], this.reg[operandA]);
+                break;
+
+            case POP:
+                 this.reg[operandA] = this.ram.read(this.reg[SP]);
+                 this.reg[SP]++
+                break;
+
+            case CALL:
+                this.reg[SP]--;
+                this.ram.write(this.reg[SP], this.reg.PC + 2);
+                this.reg.PC = this.reg[operandA];
+                break;
+                
+
             default:
             console.log("Unknown instruction: " + IR.toString(2));
             this.stopClock();
@@ -128,8 +152,10 @@ class CPU {
         // for any particular instruction.
         
         // !!! IMPLEMENT ME
-
+    
+     if (IR !== CALL && IR !== RET) {
         this.reg.PC += (IR >>> 6) + 1
+     }
 
     }
 }
